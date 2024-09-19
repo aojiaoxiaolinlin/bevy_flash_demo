@@ -2,16 +2,50 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/bevy_flash_example/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite + Vue + TS</title>
-  <script type="module" crossorigin src="/bevy_flash_example/assets/index-DENlO7Mb.js"></script>
-  <link rel="stylesheet" crossorigin href="/bevy_flash_example/assets/index-CusWAS5C.css">
+    <style type="text/css">
+        body,
+        html {
+            height: 100%;
+        }
+
+        body {
+            background-color: rgb(25, 25, 25);
+            margin: 0;
+        }
+
+        .game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #bevy {
+            background-color: white;
+            outline: none;
+        }
+    </style>
 </head>
 
 <body>
-  <div id="app"></div>
+    <div class="game-container">
+        <canvas id="bevy" width="100%" height="100%">
+            Javascript and support for canvas is required
+        </canvas>
+    </div>
+    </div>
+    <script type="module">
+        import init from './bevy_flash_demo.js'
+        await init()
+            .catch((error) => {
+                if (!error.message.startsWith("Using exceptions for control flow, don't mind me. This isn't actually an error!")) {
+                    throw error;
+                }
+            });
+        let bevy = document.querySelector("#bevy");
+        bevy.setAttribute("style", "width: 100%; height: 100%;");
+    </script>
 </body>
 
 </html>
