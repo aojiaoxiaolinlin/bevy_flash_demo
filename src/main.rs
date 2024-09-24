@@ -46,7 +46,7 @@ fn setup(mut commands: Commands, assert_server: Res<AssetServer>) {
         },
         spatial: SpatialBundle {
             transform: Transform::from_translation(Vec3::new(-500.0, 0.0, 0.0))
-                .with_scale(Vec3::splat(1.0)),
+                .with_scale(Vec3::new(1.0, -1.0, 1.0)),
             ..Default::default()
         },
         ..Default::default()
@@ -140,7 +140,7 @@ fn control(
         control(&mut query, None);
     }
 
-    for touch in touches.iter_just_pressed() {
+    for _touch in touches.iter_just_pressed() {
         control(&mut query, None);
     }
 }
