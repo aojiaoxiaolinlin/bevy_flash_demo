@@ -51,6 +51,14 @@ fn setup(mut commands: Commands, assert_server: Res<AssetServer>) {
         },
         ..Default::default()
     });
+    commands.spawn(SwfBundle {
+        swf_handle: assert_server.load("123680-idle.swf"),
+        spatial: SpatialBundle {
+            transform: Transform::from_scale(Vec3::new(-1.0, -1.0, 1.0)),
+            ..Default::default()
+        },
+        ..Default::default()
+    });
 }
 
 fn control(
