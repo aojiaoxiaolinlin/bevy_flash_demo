@@ -46,15 +46,16 @@ fn setup(mut commands: Commands, assert_server: Res<AssetServer>) {
         },
         spatial: SpatialBundle {
             transform: Transform::from_translation(Vec3::new(-500.0, 0.0, 0.0))
-                .with_scale(Vec3::new(1.0, -1.0, 1.0)),
+                .with_scale(Vec3::splat(1.0)),
             ..Default::default()
         },
         ..Default::default()
     });
     commands.spawn(SwfBundle {
-        swf_handle: assert_server.load("123680-idle.swf"),
+        swf_handle: assert_server.load("131381-idle.swf"),
         spatial: SpatialBundle {
-            transform: Transform::from_scale(Vec3::new(-1.0, -1.0, 1.0)),
+            transform: Transform::from_scale(Vec3::splat(4.0))
+                .with_translation(Vec3::new(-500.0, 0.0, 0.0)),
             ..Default::default()
         },
         ..Default::default()

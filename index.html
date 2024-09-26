@@ -23,7 +23,9 @@
         }
 
         #bevy {
-            background-color: white;
+            background-color: red;
+            height: 80%;
+            width: 100%;
             outline: none;
         }
     </style>
@@ -31,12 +33,10 @@
 
 <body>
     <div class="game-container">
-        <div>
-            <h1 style="color: aliceblue;">Left click to change animation</h1>
-        </div>
         <canvas id="bevy">
             Javascript and support for canvas is required
         </canvas>
+        <button id="fullscreen">进入全屏</button>
     </div>
     </div>
     <script type="module">
@@ -48,6 +48,10 @@
                 }
             });
         let bevy = document.querySelector("#bevy");
+        let fullscreen = document.querySelector("#fullscreen");
+        fullscreen.addEventListener("click", () => {
+            bevy.requestFullscreen();
+        }, false)
         // bevy.setAttribute("style", "width: 100%; height: 100%;");
     </script>
 </body>
