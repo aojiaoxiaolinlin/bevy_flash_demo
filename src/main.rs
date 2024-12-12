@@ -1,18 +1,15 @@
-use bevy::prelude::{Local, MouseButton, PluginGroup, Touches};
+use bevy::prelude::{Camera2d, Local, MouseButton, PluginGroup, Touches, Visibility};
 use bevy::window::{Window, WindowPlugin};
 use bevy::{
     app::{App, Startup, Update},
-    asset::{AssetServer, Assets, Handle},
+    asset::{AssetServer, Assets},
     input::ButtonInput,
     math::Vec3,
-    prelude::{Camera2dBundle, Commands, KeyCode, Query, Res, ResMut, SpatialBundle, Transform},
+    prelude::{Commands, KeyCode, Query, Res, ResMut, Transform},
     DefaultPlugins,
 };
-use bevy_flash::{
-    assets::SwfMovie,
-    bundle::{Swf, SwfBundle},
-    plugin::FlashPlugin,
-};
+use bevy_flash::bundle::FlashAnimation;
+use bevy_flash::{assets::SwfMovie, plugin::FlashPlugin};
 #[derive(Default)]
 struct CurrentFrame(u16);
 
@@ -37,48 +34,57 @@ fn main() {
 }
 
 fn setup(mut commands: Commands, assert_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle::default());
-    commands.spawn(SwfBundle {
-        swf_handle: assert_server.load("spirit2724src.swf"),
-        swf: Swf {
+    commands.spawn(Camera2d::default());
+    commands.spawn((
+        FlashAnimation {
             name: Some(String::from("_mc")),
+            swf_movie: assert_server.load("spirit2724src.swf"),
             ..Default::default()
         },
-        spatial: SpatialBundle {
-            transform: Transform::from_translation(Vec3::new(-500.0, 0.0, 0.0))
-                .with_scale(Vec3::splat(1.0)),
+        Transform::from_translation(Vec3::new(-500.0, 0.0, 0.0)).with_scale(Vec3::splat(1.0)),
+        Visibility::default(),
+    ));
+    commands.spawn((
+        FlashAnimation {
+            name: Some(String::from("m")),
+            swf_movie: assert_server.load("131381-idle.swf"),
             ..Default::default()
         },
-        ..Default::default()
-    });
-    commands.spawn(SwfBundle {
-        swf_handle: assert_server.load("131381-idle.swf"),
-        spatial: SpatialBundle {
-            transform: Transform::from_scale(Vec3::splat(4.0))
-                .with_translation(Vec3::new(-500.0, 0.0, 0.0)),
+        Transform::from_scale(Vec3::splat(4.0)).with_translation(Vec3::new(-500.0, 0.0, 0.0)),
+        Visibility::default(),
+    ));
+    commands.spawn((
+        FlashAnimation {
+            name: Some(String::from("c")),
+            swf_movie: assert_server.load("frames.swf"),
             ..Default::default()
         },
-        ..Default::default()
-    });
+        Transform::from_scale(Vec3::splat(1.0)).with_translation(Vec3::new(-1300.0, 1100.0, 0.0)),
+        Visibility::default(),
+    ));
 }
 
 fn control(
-    mut query: Query<(&mut Swf, &Handle<SwfMovie>)>,
+    mut query: Query<&mut FlashAnimation>,
     mut swf_movies: ResMut<Assets<SwfMovie>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mouse_button_input: Res<ButtonInput<MouseButton>>,
     touches: Res<Touches>,
     mut current_frame: Local<CurrentFrame>,
 ) {
-    let mut control = |query: &mut Query<'_, '_, (&mut Swf, &Handle<SwfMovie>)>,
-                       frame: Option<u16>| {
-        query.iter_mut().for_each(|(mut swf, handle_swf_movie)| {
-            if let Some(swf_movie) = swf_movies.get_mut(handle_swf_movie.id()) {
-                if swf.is_target_movie_clip() {
+    let mut control = |query: &mut Query<'_, '_, &mut FlashAnimation>, frame: Option<u16>| {
+        query.iter_mut().for_each(|flash_animation| {
+            if let Some(swf_movie) = swf_movies.get_mut(flash_animation.swf_movie.id()) {
+                if swf_movie.is_target_movie_clip(
+                    flash_animation.name.clone().unwrap_or("root".to_string()),
+                ) {
                     if let Some(frame) = frame {
                         current_frame.0 = frame;
-                        swf.root_movie_clip
-                            .goto_frame(&mut swf_movie.movie_library, frame, true);
+                        swf_movie.root_movie_clip.goto_frame(
+                            &mut swf_movie.movie_library,
+                            frame,
+                            true,
+                        );
                     } else {
                         if current_frame.0 >= 110 {
                             current_frame.0 = 0;
@@ -86,7 +92,7 @@ fn control(
                             current_frame.0 += 10;
                         }
 
-                        swf.root_movie_clip.goto_frame(
+                        swf_movie.root_movie_clip.goto_frame(
                             &mut swf_movie.movie_library,
                             current_frame.0,
                             true,
