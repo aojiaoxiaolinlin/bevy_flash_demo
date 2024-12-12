@@ -75,9 +75,7 @@ fn control(
     let mut control = |query: &mut Query<'_, '_, &mut FlashAnimation>, frame: Option<u16>| {
         query.iter_mut().for_each(|flash_animation| {
             if let Some(swf_movie) = swf_movies.get_mut(flash_animation.swf_movie.id()) {
-                if swf_movie.is_target_movie_clip(
-                    flash_animation.name.clone().unwrap_or("root".to_string()),
-                ) {
+                if flash_animation.name == Some(String::from("_mc")) {
                     if let Some(frame) = frame {
                         current_frame.0 = frame;
                         swf_movie.root_movie_clip.goto_frame(
