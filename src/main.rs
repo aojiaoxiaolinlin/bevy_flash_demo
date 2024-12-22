@@ -1,4 +1,4 @@
-use bevy::prelude::{Camera2d, Local, MouseButton, PluginGroup, Touches, Visibility};
+use bevy::prelude::{Camera2d, Local, MouseButton, PluginGroup, Touches};
 use bevy::window::{Window, WindowPlugin};
 use bevy::{
     app::{App, Startup, Update},
@@ -41,8 +41,7 @@ fn setup(mut commands: Commands, assert_server: Res<AssetServer>) {
             swf_movie: assert_server.load("spirit2724src.swf"),
             ..Default::default()
         },
-        Transform::from_translation(Vec3::new(-500.0, 0.0, 0.0)).with_scale(Vec3::splat(1.0)),
-        Visibility::default(),
+        Transform::from_scale(Vec3::splat(2.0)).with_translation(Vec3::new(0.0, -200.0, 0.0)),
     ));
     commands.spawn((
         FlashAnimation {
@@ -50,17 +49,16 @@ fn setup(mut commands: Commands, assert_server: Res<AssetServer>) {
             swf_movie: assert_server.load("131381-idle.swf"),
             ..Default::default()
         },
-        Transform::from_scale(Vec3::splat(4.0)).with_translation(Vec3::new(-500.0, 0.0, 0.0)),
-        Visibility::default(),
+        Transform::from_translation(Vec3::new(-600.0, 00.0, 0.0)).with_scale(Vec3::splat(6.0)),
     ));
     commands.spawn((
         FlashAnimation {
             name: Some(String::from("c")),
             swf_movie: assert_server.load("frames.swf"),
+            ignore_root_swf_transform: false,
             ..Default::default()
         },
-        Transform::from_scale(Vec3::splat(1.0)).with_translation(Vec3::new(-1300.0, 1100.0, 0.0)),
-        Visibility::default(),
+        Transform::from_scale(Vec3::splat(1.0)).with_translation(Vec3::new(-1300.0, 1300.0, 0.0)),
     ));
 }
 
