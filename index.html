@@ -24,7 +24,7 @@
 
         #bevy {
             background-color: white;
-            height: 80%;
+            height: 100%;
             width: 100%;
             outline: none;
         }
@@ -36,7 +36,7 @@
         <canvas id="bevy">
             Javascript and support for canvas is required
         </canvas>
-        <button id="fullscreen">进入全屏</button>
+        <!-- <button id="fullscreen">进入全屏</button> -->
     </div>
     </div>
     <script type="module">
@@ -48,6 +48,8 @@
                 }
             });
         let bevy = document.querySelector("#bevy");
+        bevy.style.width = "100%";
+        bevy.style.height = "100%";
         let fullscreen = document.querySelector("#fullscreen");
         fullscreen.addEventListener("click", () => {
             bevy.requestFullscreen();
