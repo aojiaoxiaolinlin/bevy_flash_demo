@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use bevy::asset::AssetMetaCheck;
 use bevy::color::palettes::css::RED;
 use bevy::prelude::{Camera2d, Local, PluginGroup};
 use bevy::window::{Window, WindowPlugin};
@@ -33,16 +34,22 @@ fn main() {
             102.0 / 255.0,
         )))
         .add_plugins((
-            DefaultPlugins.set(WindowPlugin {
-                primary_window: Some(Window {
-                    resolution: (1024., 768.).into(),
-                    // provide the ID selector string here
-                    canvas: Some("#bevy".into()),
-                    // ... any other window properties ...
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        resolution: (1024., 768.).into(),
+                        // provide the ID selector string here
+                        canvas: Some("#bevy".into()),
+                        // ... any other window properties ...
+                        ..Default::default()
+                    }),
+
+                    ..Default::default()
+                })
+                .set(AssetPlugin {
+                    meta_check: AssetMetaCheck::Never,
                     ..Default::default()
                 }),
-                ..Default::default()
-            }),
             FlashPlugin,
         ))
         .add_systems(Startup, setup)
