@@ -71,3 +71,5 @@ cargo fmt --check
 原生验证用 `cargo run`：1–4 切页，Space 暂停；完整控制面板在网页中。网页验收应检查四页切换、动作完成回 fallback、终态锁定与重置、皮肤、UI 循环、按钮 hover/press/禁用、窗口缩放和加载失败重试。
 
 诊断面板默认关闭，显示平滑应用帧率，包含浏览器调度开销，不声称为 GPU 滤镜耗时。精确屏幕取样混合不在当前库范围内，Lighten 使用 Max 近似。
+
+动画页和换肤页使用 `CompositingSpace::Srgb`，与 Flash 的合成方式一致；矢量 UI 和按钮页使用默认线性合成，因为当前 Bevy 原生 UI shader 输出线性颜色，不能直接写入 sRGB 合成目标。切页时切换相机配置，公开 UI 输出纹理仍保持 `Rgba8UnormSrgb`。

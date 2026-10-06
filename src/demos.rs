@@ -226,6 +226,7 @@ fn rebuild(
     server: Res<AssetServer>,
     mut demo: ResMut<Demo>,
     old: Query<Entity, With<SceneRoot>>,
+    cameras: Query<Entity, With<Camera2d>>,
 ) {
     if !demo.dirty {
         return;
@@ -234,6 +235,15 @@ fn rebuild(
         commands.entity(entity).despawn();
     }
     let page = demo.status.page;
+    // Flash instance shaders support gamma-space compositing, but Bevy's
+    // ImageNode shader writes linear colors. UI pages must use a linear view.
+    for camera in &cameras {
+        if matches!(page, Page::Animation | Page::Skins) {
+            commands.entity(camera).insert(CompositingSpace::Srgb);
+        } else {
+            commands.entity(camera).remove::<CompositingSpace>();
+        }
+    }
     let index = demo.status.index;
     demo.status = Status {
         page,
