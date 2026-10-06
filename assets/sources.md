@@ -6,6 +6,7 @@
 |---|---|
 | animations/spirit2159src.vab | spirit2159src.vab |
 | animations/spirit3021src.vab | spirit3021src.vab |
+| animations/luo_ke_lu.vab | luo_ke_lu.vab |
 | animations/wu_kong.vab | wu_kong.vab |
 | ui/nameplate3.vab | nameplate3.vab |
 | ui/background551284.vab | background551284.vab |

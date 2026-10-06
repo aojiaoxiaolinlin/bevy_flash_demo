@@ -25,6 +25,8 @@ $('fallback').addEventListener('change', () => send({action:'fallback', name:$('
 $('pause').addEventListener('click', () => send({action:'pause'}));
 $('reset').addEventListener('click', () => send({action:'reset'}));
 $('speed').addEventListener('change', () => send({action:'speed', value:Number($('speed').value)}));
+$('zoom').addEventListener('change', () => send({action:'zoom', value:Number($('zoom').value)}));
+$('zoom-reset').addEventListener('click', () => send({action:'zoom', value:1}));
 $('seek').addEventListener('input', () => send({action:'seek', frame:Number($('seek').value)}));
 $('seek').addEventListener('pointerdown', () => seeking = true);
 window.addEventListener('pointerup', () => seeking = false);
@@ -79,6 +81,8 @@ function update() {
   $('notice').textContent = state.notice;
   $('pause').textContent = state.playing ? '暂停' : '继续';
   $('speed').value = String(state.speed);
+  $('zoom').value = String(state.zoom);
+  $('render-scale').textContent = `资源倍率 ${state.render_scale.toFixed(2)}×`;
   $('fallback').value = state.fallback;
   $('frame').textContent = `${state.frame + 1} / ${state.frames}`;
   if (!seeking) { $('seek').max = Math.max(0,state.frames-1); $('seek').value = state.frame; }

@@ -139,6 +139,11 @@ fn actions(
                 demo.dirty = true;
             }
             Action::Diagnostics { value } => demo.diagnostics = value,
+            Action::Zoom { value } => {
+                if value.is_finite() {
+                    demo.status.zoom = value.clamp(0.25, 4.0);
+                }
+            }
             Action::Disabled { value } => {
                 for entity in &buttons {
                     if value {
@@ -235,6 +240,7 @@ fn rebuild(
         index,
         notice: "正在加载资源与依赖…".into(),
         speed: 1.0,
+        zoom: 1.0,
         ..default()
     };
     demo.target = match page {
@@ -452,6 +458,7 @@ fn ready(
 
 fn fit(
     windows: Query<&Window>,
+    mut demo: ResMut<Demo>,
     mut actors: Query<(&Framing, &mut Transform), With<Actor>>,
     graphics: Res<Assets<VabGraphic>>,
     mut images: Query<(&PresentationWidth, &VabImageNode, &mut Node)>,
@@ -460,7 +467,10 @@ fn fit(
     for (frame, mut transform) in &mut actors {
         let scale = (window.width() * 0.88 / frame.size.x)
             .min(window.height() * 0.82 / frame.size.y)
-            .clamp(0.01, 8.0);
+            .clamp(0.01, 8.0)
+            * demo.status.zoom;
+        // Zoom around the fixed framing center, never the current frame bounds.
+        demo.status.render_scale = scale;
         transform.scale = Vec3::splat(scale);
         transform.translation = Vec3::new(-frame.center.x * scale, frame.center.y * scale, 0.0);
     }

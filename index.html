@@ -25,6 +25,8 @@
           <option value="hold">单次 → 保持末帧</option><option value="chain">连续两次 → fallback 循环</option><option value="terminal">终态播放（锁定）</option></select></label>
         <div class="row"><button id="play">播放动作</button><button id="reset">重置终态</button></div>
         <label>默认返回动作<select id="fallback"></select></label>
+        <label>展示缩放（相对适配）<select id="zoom"><option value="0.25">25%</option><option value="0.5">50%</option><option value="1" selected>100%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option><option value="4">400%</option></select></label>
+        <div class="row"><button id="zoom-reset">重置适配</button><output id="render-scale">资源倍率 —</output></div>
       </section>
       <section id="playback-controls" hidden>
         <div class="row"><button id="pause">暂停</button><label>速度<select id="speed"><option>0.25</option><option>0.5</option><option selected>1</option><option>1.5</option><option>2</option><option>4</option></select></label></div>

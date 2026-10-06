@@ -6,7 +6,7 @@
 
 | 页 | 内容 | 参考库例子 |
 |---|---|---|
-| 动画播放 | 素材/动作切换、loop/once/hold/terminal、动作链、fallback、暂停、速度、定位、事件 | show_demo |
+| 动画播放 | 素材/动作切换、loop/once/hold/terminal、动作链、fallback、暂停、速度、定位、事件、25%–400% 展示缩放 | show_demo |
 | 皮肤切换 | 从资产枚举槽位与变体，逐槽选择 | wu_kong_skin |
 | 矢量 UI | 静态名字框与动态 sparkles，三个尺寸节点、等比缩放和共享栅格缓存 | ui_graphics / animated_ui |
 | 原生按钮 | up/over/down、禁用、按下反馈；hit 不作为外观 | ui_buttons |
@@ -41,7 +41,7 @@ python -m http.server 8080 --directory dist
 
 首次启用：
 
-1. 将示例代码、Cargo.lock、六个 VAB 资产和工作流提交到此仓库。
+1. 将示例代码、Cargo.lock、七个 VAB 资产和工作流提交到此仓库。
 2. 先将 bevy_flash 的浏览器计时与 WebGPU 着色器修复，以及 vatf 的未使用 git 依赖移除推送到对应仓库。CI 无法读取本地未提交的修改。
 3. 在此仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。
 4. 推送 main，或在 Actions 中选择 **WebGPU showcase → Run workflow**（main）。成功后可在部署作业打开页面地址；默认地址为 https://aojiaoxiaolinlin.github.io/bevy_flash_example/。
@@ -60,7 +60,7 @@ assets/ 包含整理后的 VAB，无需运行时依赖库项目的 assets。sour
 
 ## 代码与验证
 
-src/catalog.rs 定义素材目录；bridge.rs 是浏览器命令/状态接口；bounds.rs 固定取景范围；demos.rs 管理页面、加载与控制。取景只在加载时测量各动作帧的联合范围，窗口变化只调整展示缩放，不按当前帧重设原点。
+src/catalog.rs 定义素材目录；bridge.rs 是浏览器命令/状态接口；bounds.rs 固定取景范围；demos.rs 管理页面、加载与控制。取景只在加载时测量各动作帧的联合范围，窗口变化只调整展示缩放，不按当前帧重设原点。动画页和换肤页提供 25%–400% 的展示缩放，100% 表示自动适配后的尺寸；资源倍率显示最终 Transform 缩放。切换素材恢复 100%，放大围绕固定取景中心，超出画布的部分会被裁切，重置适配可恢复全景。画布背景采用 Flash 常用的 sRGB (102, 102, 102)。
 
 ```powershell
 cargo check --target wasm32-unknown-unknown
