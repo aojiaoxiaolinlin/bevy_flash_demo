@@ -14,13 +14,9 @@ concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 
-# Match the Bevy checkout used to validate this demo. The library/compiler
-# track main during development; replace those refs with SHAs for a release.
+# Cargo.lock pins crates.io and Git dependencies; no sibling checkouts are needed.
 env:
-  BEVY_REF: c6f634ca9f406d68ba5109d921247b654cb42c10
-  FLASH_REF: main
-  VATF_REF: main
-  RUST_VERSION: 1.95.0
+  RUST_VERSION: 1.97.1
   CARGO_BUILD_JOBS: 2
   CARGO_TERM_COLOR: always
 
@@ -34,38 +30,6 @@ jobs:
         with:
           path: bevy_flash_example
           persist-credentials: false
-      - name: Check out Bevy
-        uses: actions/checkout@v6
-        with:
-          repository: bevyengine/bevy
-          ref: ${{ env.BEVY_REF }}
-          path: bevy
-          persist-credentials: false
-      - name: Check out renderer
-        uses: actions/checkout@v6
-        with:
-          repository: aojiaoxiaolinlin/bevy_flash
-          ref: ${{ env.FLASH_REF }}
-          path: bevy_flash
-          persist-credentials: false
-      - name: Check out VATF
-        uses: actions/checkout@v6
-        with:
-          repository: aojiaoxiaolinlin/vatf
-          ref: ${{ env.VATF_REF }}
-          path: vatf
-          persist-credentials: false
-      - name: Record dependency revisions
-        id: revisions
-        shell: bash
-        run: |
-          key=""
-          for repo in bevy bevy_flash vatf; do
-            revision="$(git -C "$repo" rev-parse HEAD)"
-            echo "$repo: $revision" >> "$GITHUB_STEP_SUMMARY"
-            key="$key-$revision"
-          done
-          echo "key=$key" >> "$GITHUB_OUTPUT"
       - name: Install Rust and WASM target
         shell: bash
         run: |
@@ -78,9 +42,9 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             bevy_flash_example/target
-          key: wasm-${{ runner.os }}-${{ env.RUST_VERSION }}${{ steps.revisions.outputs.key }}-${{ hashFiles('bevy_flash_example/Cargo.lock') }}
+          key: wasm-${{ runner.os }}-${{ env.RUST_VERSION }}-${{ hashFiles('bevy_flash_example/Cargo.lock') }}
           restore-keys: |
-            wasm-${{ runner.os }}-${{ env.RUST_VERSION }}${{ steps.revisions.outputs.key }}-
+            wasm-${{ runner.os }}-${{ env.RUST_VERSION }}-
       - name: Read wasm-bindgen version from Cargo.lock
         id: bindgen
         working-directory: bevy_flash_example

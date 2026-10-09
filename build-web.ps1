@@ -14,7 +14,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'wasm-bindgen failed; CLI and crate versions must match' }
     foreach ($file in @('index.html','style.css','app.js')) { Copy-Item -LiteralPath $file -Destination (Join-Path 'dist' $file) -Force }
     # Copy demo assets without deleting any existing output tree.
-    foreach ($folder in @('animations', 'ui')) {
+    foreach ($folder in @('animations', 'ui', 'fonts')) {
         $source = Join-Path 'assets' $folder
         $destination = Join-Path 'dist/assets' $folder
         if ($IsWindows) {

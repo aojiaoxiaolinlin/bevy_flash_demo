@@ -1,9 +1,9 @@
 mod bounds;
-mod bridge;
 mod catalog;
+mod controls;
 mod demos;
 
-use bevy::prelude::*;
+use bevy::{asset::AssetMetaCheck, prelude::*};
 use bevy_flash::{FlashPlayerPlugin, vab_ui::VabUiPlugin};
 
 fn main() {
@@ -26,10 +26,15 @@ fn main() {
     App::new()
         .insert_resource(ClearColor(Color::srgb_u8(102, 102, 102)))
         .add_plugins((
-            DefaultPlugins.set(WindowPlugin {
-                primary_window: Some(window),
-                ..default()
-            }),
+            DefaultPlugins
+                .set(AssetPlugin {
+                    meta_check: AssetMetaCheck::Never,
+                    ..default()
+                })
+                .set(WindowPlugin {
+                    primary_window: Some(window),
+                    ..default()
+                }),
             FlashPlayerPlugin,
             VabUiPlugin,
             demos::DemoPlugin,
